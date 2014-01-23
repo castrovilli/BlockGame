@@ -9,8 +9,8 @@
 #import "MyScene.h"
 #import "BlockNode.h"
 
-#define COLUMNS         6
-#define ROWS            6
+#define COLUMNS         3
+#define ROWS            3
 
 @implementation MyScene
 
@@ -65,8 +65,54 @@
     return self;
 }
 
+-(NSArray *)getAllBlocks{
+    NSMutableArray *blocks = [NSMutableArray array];
+    for (SKNode *childNode in self.scene.children) {
+        if ([childNode isKindOfClass:[BlockNode class]]) {
+            [blocks addObject:childNode];
+        }
+    }
+    return [NSArray arrayWithArray:blocks];
+}
+
+-(BOOL)inRange:(BlockNode *)testNode ofBlock:(BlockNode *)baseNode{
+    // if the nodes are in the same row/column
+    BOOL isRow = (baseNode.row == testNode.row);
+    BOOL isCol = (baseNode.column == testNode.column);
+    
+    // if the nodes are one row/column apart
+    BOOL oneOffCol = (baseNode.column+1 == testNode.column || baseNode.column-1 == testNode.column);
+    BOOL oneOffRow = (baseNode.row+1 == testNode.row || baseNode.row-1 == testNode.row);
+    
+    // if the nodes are the same color
+    BOOL sameColor = [baseNode.color isEqual:testNode.color];
+    
+    // returns true when they are next to each other AND the same color
+    return ( (isRow && oneOffCol) || (isCol && oneOffRow) ) && sameColor;
+}
+
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
     /* Called when a touch begins */
+    UITouch *touch = [touches anyObject];
+    CGPoint location = [touch locationInNode:self];
+    
+    SKNode *node = (SKNode *)[self nodeAtPoint:location];
+    if ([node isKindOfClass:[BlockNode class]]) {
+        BlockNode *Clickedblock = (BlockNode *)node;
+        NSMutableArray *blocksToRemove = [NSMutableArray arrayWithObject:Clickedblock];
+        NSLog(@"Node: %@ %d %d",node, Clickedblock.row , Clickedblock.column);
+        
+        for (BlockNode *childNode in [self getAllBlocks]) {
+            NSLog(@"Selected block %d %d",childNode.row , childNode.column);
+            if ([self inRange:childNode ofBlock:Clickedblock]) {
+                
+                [blocksToRemove addObject:childNode];
+            }
+        }
+        for (BlockNode *node in blocksToRemove) {
+            [node removeFromParent];
+        }
+    }
     
 }
 
