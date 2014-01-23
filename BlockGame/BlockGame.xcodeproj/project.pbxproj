@@ -24,6 +24,7 @@
 		6720E31E188FD60500558D66 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6720E2F9188FD60500558D66 /* UIKit.framework */; };
 		6720E326188FD60500558D66 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6720E324188FD60500558D66 /* InfoPlist.strings */; };
 		6720E328188FD60500558D66 /* BlockGameTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6720E327188FD60500558D66 /* BlockGameTests.m */; };
+		6747E14E1890A8B2001CDDC7 /* BlockNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 6747E14D1890A8B2001CDDC7 /* BlockNode.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,8 @@
 		6720E323188FD60500558D66 /* BlockGameTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BlockGameTests-Info.plist"; sourceTree = "<group>"; };
 		6720E325188FD60500558D66 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6720E327188FD60500558D66 /* BlockGameTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BlockGameTests.m; sourceTree = "<group>"; };
+		6747E14C1890A8B2001CDDC7 /* BlockNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockNode.h; sourceTree = "<group>"; };
+		6747E14D1890A8B2001CDDC7 /* BlockNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockNode.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +131,8 @@
 				6720E30D188FD60500558D66 /* ViewController.m */,
 				6720E30F188FD60500558D66 /* MyScene.h */,
 				6720E310188FD60500558D66 /* MyScene.m */,
+				6747E14C1890A8B2001CDDC7 /* BlockNode.h */,
+				6747E14D1890A8B2001CDDC7 /* BlockNode.m */,
 				6720E312188FD60500558D66 /* Spaceship.png */,
 				6720E314188FD60500558D66 /* Images.xcassets */,
 				6720E2FE188FD60500558D66 /* Supporting Files */,
@@ -266,6 +271,7 @@
 				6720E30E188FD60500558D66 /* ViewController.m in Sources */,
 				6720E308188FD60500558D66 /* AppDelegate.m in Sources */,
 				6720E304188FD60500558D66 /* main.m in Sources */,
+				6747E14E1890A8B2001CDDC7 /* BlockNode.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,6 +482,7 @@
 				6720E32D188FD60500558D66 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6720E32E188FD60500558D66 /* Build configuration list for PBXNativeTarget "BlockGameTests" */ = {
 			isa = XCConfigurationList;
@@ -484,6 +491,7 @@
 				6720E330188FD60500558D66 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
