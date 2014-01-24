@@ -13,9 +13,26 @@
 #define COLUMNS         6
 #define ROWS            7
 #define MIN_BLOCK_BUST  2
+#define LEVEL_TIME      10.0f
+
+
+// Game States
+typedef enum {
+    STOPPED,
+    STARTING,
+    PLAYING
+} GameState;
 
 @interface MyScene() {
     NSArray *_colors;
+    
+    SKLabelNode *_scoreLabel;
+    SKLabelNode *_timerLabel;
+    
+    NSUInteger _score;
+    
+    GameState _gameState;
+    CFTimeInterval _startedTime;
 }
 
 - (NSArray*) getAllBlocks;
@@ -31,10 +48,10 @@
         self.backgroundColor = [SKColor colorWithRed:0.15 green:0.15 blue:0.3 alpha:1.0];
         
         // set the gravity of our world
-        self.physicsWorld.gravity = CGVectorMake(0, -8.f);
+        self.physicsWorld.gravity = CGVectorMake(0, -15.f);
         
         // define a list of colors the blocks can potentially be
-        _colors = @[[UIColor greenColor], [UIColor blueColor], [UIColor yellowColor], [UIColor purpleColor]];
+        _colors = @[[UIColor greenColor], [UIColor blueColor], [UIColor yellowColor], [UIColor redColor]];
         
         // create the floor for our scene
         SKSpriteNode *floor = [SKSpriteNode spriteNodeWithColor:[UIColor blackColor] size:CGSizeMake(320, 40)];
@@ -48,6 +65,27 @@
         // add the floor to our scene
         [self addChild:floor];
         
+        // Set Attributes of Score Label
+        _scoreLabel = [SKLabelNode labelNodeWithFontNamed:@"Arial"];
+        _scoreLabel.text = @"Score : 0";
+        _scoreLabel.fontColor = [UIColor whiteColor];
+        _scoreLabel.fontSize = 24.0f;
+        _scoreLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeLeft;
+        _scoreLabel.position = CGPointMake(10,10);
+        
+        // Add scoreLabel to scene
+        [self.scene addChild:_scoreLabel];
+        
+        // Set Attributes of Timer Label
+        _timerLabel = [SKLabelNode labelNodeWithFontNamed:@"Arial"];
+        _timerLabel.text = @"Timer : 0";
+        _timerLabel.fontColor = [UIColor whiteColor];
+        _timerLabel.fontSize = 24.0f;
+        _timerLabel.horizontalAlignmentMode = SKLabelHorizontalAlignmentModeRight;
+        _timerLabel.position = CGPointMake(310,10);
+        
+        // Add TimerLabel to scene
+        [self.scene addChild:_timerLabel];
         
         // iterate through however many rows we want
         for(int row=0; row<ROWS; row++) {
@@ -171,6 +209,12 @@
         // ensure that there are enough connected blocks selected
         if(objectsToRemove.count >= MIN_BLOCK_BUST) {
             
+            // if the user tapped on a valid block while the game is stopped,
+            // it's their indication that the game should now start
+            if (_gameState == STOPPED) {
+                _gameState = STARTING;
+            }
+            
             // iterate through everything we need to delete
             for(BlockNode *deleteNode in objectsToRemove) {
                 
@@ -183,6 +227,10 @@
                         --testNode.row;
                     }
                 }
+                
+                // Whenever a block is destroyed, increment the score
+                ++_score;
+                _scoreLabel.text =[NSString stringWithFormat:@"Score: %d", _score];
             }
             
             
@@ -236,9 +284,38 @@
     
 }
 
+-(void)gameEnded{
+    
+    _gameState = STOPPED;
+    
+    NSString *message = [NSString stringWithFormat:@"You scored %d  this time",_score];
+    
+    UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Game Over!!"
+                                                   message:message
+                                                  delegate:nil
+                                         cancelButtonTitle:@"OK"
+                                         otherButtonTitles:nil, nil];
+    [alert show];
+    _score = 0;
+}
+
 -(void)update:(CFTimeInterval)currentTime {
     /* Called before each frame is rendered */
     
+    if (_gameState == STARTING) {
+        _startedTime = currentTime;
+        _gameState = PLAYING;
+    }
+    
+    if (_gameState == PLAYING) {
+        int timeLeftRounded = ceil(LEVEL_TIME + (_startedTime - currentTime));
+        _timerLabel.text = [NSString stringWithFormat:@"Time: %d",timeLeftRounded];
+        
+        if (timeLeftRounded == 0) {
+            _gameState = STOPPED;
+            [self gameEnded];
+        }
+    }
     // go through all the blocks in our scene
     for(SKNode *node in self.scene.children) {
         
